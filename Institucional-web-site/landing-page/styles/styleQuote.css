@@ -1,0 +1,23 @@
+.quoteContainer {
+
+width: 700px;
+display: flex;
+justify-content: center;
+flex-direction: column;
+font-family: "calistoga";
+font-size: 50px;
+color: white;
+gap: 60px;
+}
+
+.quoteContainer .sentenceContainer {
+
+display: flex;
+text-align: center;
+height: 80%;
+}
+
+.quoteContainer .autorContainer {
+display: flex;
+justify-content: flex-end;
+} 

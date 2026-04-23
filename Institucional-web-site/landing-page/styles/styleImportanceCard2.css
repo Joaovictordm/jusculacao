@@ -1,0 +1,55 @@
+.importanceContainer .cardTopic2 {
+    background-color: rgb(40, 40, 40);
+    width: 70%;
+    height: 120px;
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 20px;
+    border-radius: 30px;
+}
+
+.importanceContainer .cardTopic2 .imgContainer2 {
+    background-color: #FF0000;
+    height: 120px;
+    width: 120px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.importanceContainer .cardTopic2 .imgContainer2 img{
+    height: 60px;
+    width: 90px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+.importanceContainer .cardTopic2 .textContainer2 {  
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.importanceContainer .cardTopic2 .textContainer2 .title2{
+    font-family: "roboto";
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.importanceContainer .cardTopic2 .textContainer2 .text2{
+    font-family: "roboto";
+    display: flex;
+    justify-content: flex-end;
+    width: 1000px;
+    color: #BDBDBD;
+    font-size: 30px;
+    text-align: right;
+}
