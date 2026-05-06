@@ -28,6 +28,13 @@
     flex-direction: row;
     gap: 20px;
     border-radius: 30px;
+    transition: 0.5s;
+}
+
+.importanceContainer .cardTopic1:hover {
+background-color: rgb(45, 45, 45);
+transform: scale(1.10);
+
 }
 
 .importanceContainer .cardTopic1 .imgContainer1 {

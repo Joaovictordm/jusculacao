@@ -1,0 +1,259 @@
+.containerScreen{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.containerScreen .containerSide {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+}
+
+.containerScreen .containerSide .titleName{
+    font-family: "roboto";
+    color: white;
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.containerScreen .containerSide .screen1 {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(134, 133, 133);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+}
+
+.containerScreen .containerSide .screen {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+}
+
+.containerScreen .containerSide .screen img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .screen span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .screen1 img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .screen1 span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .exit {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.containerScreen .containerSide .exit img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .exit span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .exit:hover {
+    background-color: rgb(112, 112, 112);
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.containerScreen .containerSide .screen:hover {
+    background-color: rgb(112, 112, 112);
+   transform: scale(1.1);
+    cursor: pointer;
+}
+
+.containerScreen .containerSide .screen1:hover {
+     background-color: rgb(112, 112, 112);
+     transform: scale(1.1);
+     cursor: pointer;
+}
+
+
+.containerScreen .containerSide .exit:active {
+    transform: scale(1);
+}
+
+.containerScreen .containerSide .screen:active {
+    
+    transform: scale(1);
+}
+
+.containerScreen .containerSide .screen1:active {
+
+     transform: scale(1);
+}
+
+.containerScreen .containerDashboard{
+    width: 80%;
+    background-color: rgb(88, 88, 88);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard{
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 32rem;
+    padding-bottom: 4rem;
+    gap: 4rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi{
+    background-color: rgb(209, 209, 209);
+    width: 20rem;
+    padding: 2rem;
+    border-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi img{
+    height: 2rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi .title {
+    font-family: "roboto";
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi .desc {
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bolder;
+    color: #323232;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi .containerImg{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 5rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerChart{
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 2rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerChart .graficoStyle {
+    width: 100%;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar {
+     background-color: rgb(209, 209, 209);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    border-radius: 0.7rem;
+    gap: 1rem;
+    
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .select{
+    height: 3rem;
+    width: 20rem;
+    display: flex;
+    text-align: center;
+    font-family: "roboto";
+    font-weight: bold;
+    font-size: 2rem;
+    border-radius: 2rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .spanTitle{
+    font-family: "roboto";
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .input{
+    height: 3rem;
+    width: 20rem;
+    border-radius: 20rem;
+    text-align: center;
+    font-family: "roboto";
+    font-weight: bold;
+    font-size: 2rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .button{
+    height: 3rem;
+    width: 15rem;
+    border-radius: 20rem;
+    text-align: center;
+    font-family: "roboto";
+    font-weight: bold;
+    font-size: 2rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .button:hover{
+    cursor: pointer;
+}
+.containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .button:active{
+    cursor: pointer;
+    transform: scale(0.9);
+}

@@ -1,0 +1,201 @@
+.containerScreen{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.containerScreen .containerSide {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+}
+
+.containerScreen .containerSide .titleName{
+    font-family: "roboto";
+    color: white;
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.containerScreen .containerSide .screen1 {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+}
+
+.containerScreen .containerSide .screen {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(134, 133, 133);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+}
+
+.containerScreen .containerSide .screen img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .screen span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .screen1 img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .screen1 span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .exit {
+    height: 5rem;
+    width: 20rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.containerScreen .containerSide .exit img{
+    height: 2rem;
+    
+}
+
+.containerScreen .containerSide .exit span{
+    color: rgb(0, 0, 0);
+    font-family: "roboto";
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.containerScreen .containerSide .exit:hover {
+    background-color: rgb(112, 112, 112);
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.containerScreen .containerSide .screen:hover {
+    background-color: rgb(112, 112, 112);
+   transform: scale(1.1);
+    cursor: pointer;
+}
+
+.containerScreen .containerSide .screen1:hover {
+     background-color: rgb(112, 112, 112);
+     transform: scale(1.1);
+     cursor: pointer;
+}
+
+
+.containerScreen .containerSide .exit:active {
+    transform: scale(1);
+}
+
+.containerScreen .containerSide .screen:active {
+    
+    transform: scale(1);
+}
+
+.containerScreen .containerSide .screen1:active {
+
+     transform: scale(1);
+}
+
+
+
+
+.containerScreen .containerDashboard{
+    width: 80%;
+    background-color: black;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding-top: 15rem;
+    padding-bottom: 5rem;
+}
+
+.containerScreen .containerDashboard .containerAddFood {
+    background-color: rgb(70, 70, 70);
+    border-radius: 2rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 50rem;
+}
+
+.containerScreen .containerDashboard .containerAddFood .title{
+    font-weight: bold;
+    font-size: 3rem;
+    font-family: "roboto";
+    color: white;
+}
+
+.containerScreen .containerDashboard .containerAddFood .desc{
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: "roboto";
+    color: white;
+}
+
+.containerScreen .containerDashboard .containerAddFood input{
+    height: 2rem;
+    width: 20rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    font-size: 2rem;
+    font-family: "roboto";
+    color: rgb(0, 0, 0);
+}
+
+
+.containerScreen .containerDashboard .containerAddFood button{
+    height: 2rem;
+    width: 15rem;
+    border-radius: 2rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: "roboto";
+    color: rgb(0, 0, 0);
+}
+
+.containerScreen .containerDashboard .containerAddFood select{
+    height: 2rem;
+    width: 20rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: "roboto";
+    color: rgb(0, 0, 0);
+}

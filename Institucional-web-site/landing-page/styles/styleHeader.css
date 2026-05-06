@@ -51,6 +51,7 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
+    padding-right: 70px;
    
 }
 
@@ -60,13 +61,13 @@
     color: white;
     font-size: 30px;
 }
-.initialContainer .headerContainer .guideContainer span:hover{
+.initialContainer .headerContainer .guideContainer a:hover{
     color: rgb(210, 210, 210);
     cursor: pointer;
 
 }
 
-.initialContainer .headerContainer .guideContainer span:active{
+.initialContainer .headerContainer .guideContainer a:active{
     color: rgb(161, 161, 161);
     transform: scale(0.98);
     
@@ -77,6 +78,7 @@
     width: 150px;
     border-radius: 30px;
     font-family: "roboto";
+
     font-size: 30px;
     font-weight: bold;
     color: black;
@@ -84,6 +86,7 @@
 }
 .initialContainer .headerContainer .guideContainer .buttonContainer:hover {
     background-color: rgb(210, 210, 210);
+     cursor: pointer;
 }
 .initialContainer .headerContainer .guideContainer .buttonContainer:active{
     background-color: rgb(161, 161, 161);

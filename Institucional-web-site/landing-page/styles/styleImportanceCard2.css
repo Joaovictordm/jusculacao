@@ -10,6 +10,12 @@
     justify-content: flex-end;
     gap: 20px;
     border-radius: 30px;
+     transition: 0.5s;
+}
+.importanceContainer .cardTopic2:hover{
+    background-color: rgb(45, 45, 45);
+    transform: scale(1.10);
+    
 }
 
 .importanceContainer .cardTopic2 .imgContainer2 {
