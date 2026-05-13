@@ -3,9 +3,22 @@ CREATE DATABASE calount;
 
 USE calount;
 
+DROP TABLE IF EXISTS usuario;
+CREATE TABLE usuario(
+id INT AUTO_INCREMENT,
+nome VARCHAR(40) NOT NULL,
+email VARCHAR(40) NOT NULL UNIQUE,
+senha VARCHAR(40) NOT NULL,
+criado_em DATETIME DEFAULT CURRENT_TIMESTAMP(),
+atualizado_em DATETIME NOT NULL,
+
+
+CONSTRAINT pk_usuario PRIMARY KEY(id)
+);
+
 DROP TABLE IF EXISTS taxa_metabolica;
 CREATE TABLE taxa_metabolica(
-id INT AUTO_INCREMENT,
+id_usuario INT,
 peso DECIMAL(10,2) NOT NULL,
 altura DECIMAL(10,2) NOT NULL,
 idade INT NOT NULL,
@@ -22,23 +35,8 @@ CONSTRAINT chk_idade CHECK (idade > 5 AND idade < 100),
 CONSTRAINT chk_sexo CHECK (sexo IN ("masculino", "feminino")),
 CONSTRAINT chk_atividade CHECK (atividade_fisica IN ("sedentario", "levemente ativo", "moderadamente ativo", "muito ativo", "extremamente ativo" )),
 CONSTRAINT chk_objetivo CHECK (objetivo IN ("emagrecer", "manter peso", "ganhar massa")),
-CONSTRAINT pk_taxa PRIMARY KEY(id)
-);
-
-DROP TABLE IF EXISTS usuario;
-CREATE TABLE usuario(
-id INT AUTO_INCREMENT,
-nome VARCHAR(40) NOT NULL,
-email VARCHAR(40) NOT NULL UNIQUE,
-senha VARCHAR(40) NOT NULL,
-fk_taxa INT,
-criado_em DATETIME DEFAULT CURRENT_TIMESTAMP(),
-atualizado_em DATETIME NOT NULL,
-
-
-CONSTRAINT pk_usuario PRIMARY KEY(id),
-CONSTRAINT fk_taxa_usuario FOREIGN KEY (fk_taxa) REFERENCES taxa_metabolica(id),
-KEY ix_nome(nome)
+CONSTRAINT pk_taxa PRIMARY KEY(id_usuario),
+CONSTRAINT fk_usuario_taxa FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
 DROP TABLE IF EXISTS comida;

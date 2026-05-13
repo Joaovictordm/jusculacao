@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <link rel="stylesheet" href="./style/styleConfig.css">
+      <link rel="stylesheet" href="./style/styleLogin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="containerImg">
+            <img src="../IMGs/gym.svg" class="img">
+        </div>
+        <div class="containerForm">
+            <div class="ContainerSeta">
+                <img class="img" src="../IMGs/arrow-back.svg" onclick="window.location.href = '../login/index.html'">
+            </div>
+            <div class="containerLogo">
+                <img src="../IMGs/logo.jpg">
+                <span>Calount</span>
+            </div>
+
+            <div class="containerLogin">
+                <div class="containerCard">
+                    <div class="title">
+                        <span>nome</span>
+                    </div>
+
+                    <div>
+                        <input type="text" class="input" placeholder="Digite seu nome" id="ipt_nome">
+                    </div>
+                    <div id="mensagem_erro_nome"></div>
+                </div>
+
+                <div class="containerCard">
+                    <div class="title">
+                        <span>email</span>
+                    </div>
+
+                    <div >
+                        <input type="text" class="input" placeholder="Digite seu email" id="ipt_email">
+                    </div>
+                    <div id="mensagem_erro_email"></div>
+                </div>
+
+                <div class="containerCard">
+                    <div class="title">
+                        <span>Senha</span>
+                    </div>
+
+                    <div >
+                        <input type="text" class="input" placeholder="Digite sua senha" id="ipt_senha">
+                    </div>
+                    <div id="mensagem_erro_senha"></div>
+                </div>
+
+                 <div class="containerCard">
+                    <div class="title">
+                        <span>Repetir senha</span>
+                    </div>
+
+                    <div >
+                        <input type="text" class="input" placeholder="Digite sua senha" id="ipt_repetir_senha">
+                    </div>
+                    <div id="mensagem_erro_repetir_senha"></div>
+                </div>
+                <div id="mensagem_erro"></div>
+            </div>
+
+            <div class="containerButton">              
+                    <button class="button" onclick="cadastrar()">registrar</button>
+            </div>
+        </div>
+
+        
+    </div>
+</body>
+</html>
+<script>
+
+  function cadastrar() {
+    // aguardar();
+
+    //Recupere o valor da nova input pelo nome do id
+    // Agora vá para o método fetch logo abaixo
+    var nomeVar = ipt_nome.value;
+    var emailVar = ipt_email.value;
+    var senhaVar = ipt_senha.value;
+    var confirmacaoSenhaVar = ipt_repetir_senha.value;
+    
+    let rexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (nomeVar.length == 0 ){
+    //   cardErro.style.display = "block";
+      mensagem_erro_nome.innerHTML = "Nome não pode estar em branco";
+
+      return false;
+    }
+    if (!rexEmail.test(emailVar) || emailVar.length == 0){
+    //   cardErro.style.display = "block";
+      mensagem_erro_email.innerHTML = "Email inváido";
+
+      return false;
+    }
+    if (senhaVar.length <= 6 || senhaVar.length == 0){
+    //   cardErro.style.display = "block";
+      mensagem_erro_senha.innerHTML = "Senha tem que ter mais de 6 caracteres";
+
+      return false;
+    }
+    if (confirmacaoSenhaVar != senhaVar || confirmacaoSenhaVar.length == 0){
+    //   cardErro.style.display = "block";
+      mensagem_erro_repetir_senha.innerHTML = "Confirmação de senha tem que ser igual a senha";
+
+      return false;
+    }
+
+    // Verificando se há algum campo em branco
+    if (nomeVar == "") {
+    //   cardErro.style.display = "block";
+      mensagem_erro_nome.innerHTML = "O nome não pode estar em branco";
+
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+    if (emailVar == "") {
+    //   cardErro.style.display = "block";
+      mensagem_erro_email.innerHTML = "O email não pode estar em branco";
+
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+    if ( senhaVar == "") {
+    //   cardErro.style.display = "block";
+      mensagem_erro_senha.innerHTML = "A senha não pode estar em branco";
+
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+    if (confirmacaoSenhaVar == "" ) {
+    //   cardErro.style.display = "block";
+      mensagem_erro_repetir_senha.innerHTML = "A confirmação de senha não pode estar em branco";
+
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+    // Verificando se o código de ativação é de alguma empresa cadastrada
+
+    // Enviando o valor da nova input
+    fetch("/usuarios/cadastrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // crie um atributo que recebe o valor recuperado aqui
+        // Agora vá para o arquivo routes/usuario.js
+        nomeServer: nomeVar,
+        emailServer: emailVar,
+        senhaServer: senhaVar
+      }),
+    })
+      .then(function (resposta) {
+        console.log("resposta: ", resposta);
+
+        if (resposta.ok) {
+          // cardErro.style.display = "block";
+
+          mensagem_erro.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+          setTimeout(() => {
+            window.location = "../login/index.html";
+          }, "2000");
+
+        } else {
+          throw "Houve um erro ao tentar realizar o cadastro!";
+        }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
+
+    return false;
+  }
+
+  function sumirMensagem() {
+    // cardErro.style.display = "none";
+    mensagem_erro_nome.innerHTML = "";
+    mensagem_erro_email.innerHTML = "";
+    mensagem_erro_senha.innerHTML = "";
+    mensagem_erro_repetir_senha.innerHTML = "";
+  }
+</script>
