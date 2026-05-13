@@ -9,12 +9,13 @@ id INT AUTO_INCREMENT,
 nome VARCHAR(40) NOT NULL,
 email VARCHAR(40) NOT NULL UNIQUE,
 senha VARCHAR(40) NOT NULL,
-criado_em DATETIME DEFAULT CURRENT_TIMESTAMP(),
-atualizado_em DATETIME NOT NULL,
-
+criado_em DATETIME DEFAULT NOW(),
+atualizado_em DATETIME DEFAULT NULL,
 
 CONSTRAINT pk_usuario PRIMARY KEY(id)
 );
+
+SELECT * FROM usuario;
 
 DROP TABLE IF EXISTS taxa_metabolica;
 CREATE TABLE taxa_metabolica(
@@ -26,7 +27,7 @@ sexo VARCHAR(10) NOT NULL,
 atividade_fisica VARCHAR(30) NOT NULL,
 objetivo VARCHAR(20) NOT NULL,
 taxa_metabolica DECIMAL (10,2) NOT NULL,
-criado_em DATETIME DEFAULT CURRENT_TIMESTAMP(),
+criado_em DATETIME DEFAULT NOW(),
 atualizado_em DATETIME NOT NULL,
 
 CONSTRAINT chk_peso CHECK (peso < 500),
