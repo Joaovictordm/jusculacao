@@ -10,7 +10,7 @@
 <body>
     <div class="containerForm">
          <div class="containerTitle">
-            <span>Olá ${nome}</span>
+            <span>Olá </span>
          </div>
 
          <div class="containerDesc">
@@ -21,52 +21,122 @@
             <div class="containerTitle">
                 <span>Peso (kg)</span>
             </div>
-            <input placeholder="Digite aqui">
+            <input placeholder="Digite aqui" id="ipt_peso">
 
              <div class="containerTitle">
                 <span>Altura (cm)</span>
             </div>
-            <input placeholder="Digite aqui">
+            <input placeholder="Digite aqui" id="ipt_altura">
 
              <div class="containerTitle">
                 <span>Idade</span>
             </div>
-            <input placeholder="Digite aqui">
+            <input placeholder="Digite aqui" id="ipt_idade">
          </div>
 
          <div class="containerNivel">
             <span>Sexo</span>
 
-            <Select class="containerSelect">
-                <option value="sedentario">Masculino</option>
-                <option value="Levemente ativo">Feminino</option>
+            <Select class="containerSelect" id="selectSexo">
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
             </Select>
          </div>
 
          <div class="containerNivel">
             <span>Qual o seu nivel de atividade física?</span>
 
-            <Select class="containerSelect">
-                <option value="sedentario">Sedentário</option>
-                <option value="Levemente ativo">Levemente ativo</option>
-                <option value="Moderado">Moderado</option>
-                <option value="Muito ativo">Muito ativo</option>
+            <Select class="containerSelect" id="selectAtividade">
+                <option value=1.2>Sedentário</option>
+                <option value=1.375>Levemente ativo</option>
+                <option value=1.55>Moderado</option>
+                <option value=1.725>Muito ativo</option>
             </Select>
          </div>
          
          <div class="containerNivel">
             <span>Qual seu objetivo?</span>
 
-            <Select class="containerSelect">
-                <option value="emagrecer">Emagrecer</option>
-                <option value="manter peso">Manter o peso</option>
-                <option value="Ganhar massa">Ganhar massa</option>
+            <Select class="containerSelect" id="selectObjetivo">
+                <option value="perder_peso">Emagrecer</option>
+                <option value="manter">Manter o peso</option>
+                <option value="ganhar_peso">Ganhar massa</option>
             </Select>
 
+            <div id="div_mensagem"></div>
+
         </div>
-        <button>
+        <button onclick="cadastrar()">
             Calcular
         </button>
     </div>
 </body>
 </html>
+<script>
+
+  function cadastrar() {
+    // aguardar();
+
+    //Recupere o valor da nova input pelo nome do id
+    // Agora vá para o método fetch logo abaixo
+    var peso = Number(ipt_peso.value);
+    var altura = Number(ipt_altura.value);
+    var idade = Number(ipt_idade.value);
+    var sexo = selectSexo.value;
+    var atividade = Number(selectAtividade.value);
+    var objetivo = selectObjetivo.value;
+    let taxa = true;
+
+    if (peso < 20 || peso > 500){
+        div_mensagem.innerHTML = `Peso inválido`;
+        return;
+    }else if(altura > 250 || altura < 0){
+        div_mensagem.innerHTML = `Altura inváldia`;
+        return;
+    }else if (idade > 120 || idade < 5){
+        div_mensagem.innerHTML = `Idade inválida`;
+        return;
+    }
+    
+
+     fetch("/taxa/adicionar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // crie um atributo que recebe o valor recuperado aqui
+        // Agora vá para o arquivo routes/usuario.js
+
+        idServer: sessionStorage.ID_USUARIO,
+        pesoServer: peso, 
+        alturaServer: altura, 
+        idadeServer: idade, 
+        sexoServer: sexo, 
+        atividadeServer: atividade, 
+        objetivoServer: objetivo
+      }),
+    })
+      .then((resposta) => {
+        console.log("resposta: ", resposta);
+        if (resposta.ok) {
+          // cardErro.style.display = "block";
+          
+          div_mensagem.innerHTML = "Taxa criada com sucesso";
+
+          setTimeout(() => {
+            window.location = "../dashboard/index/index.html";
+          }, 2000);
+
+        } else {
+          throw "Houve um erro";
+          div_mensagem.innerHTML = "Erro ao criar taxa";
+        }
+      })
+      .catch((erro) => {
+        console.log(erro);
+      });
+   
+  }
+
+</script>

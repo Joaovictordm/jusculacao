@@ -69,8 +69,6 @@
 </html>
 
 <script>
-
-
     function entrar() {
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
@@ -81,7 +79,7 @@
             return false;
         }
         else {
-            setInterval(sumirMensagem, 5000)
+            // setInterval(sumirMensagem, 5000)
         }
 
         console.log("FORM LOGIN: ", emailVar);
@@ -103,18 +101,47 @@
                 console.log(resposta);
 
                 resposta.json().then(json => {
-                    console.log(json);
                     console.log(JSON.stringify(json));
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
 
-                    setTimeout(function () {
-                        window.location = "../dashboard/index/index.html";
-                    }, 1000); // apenas para exibir o loading
-
-                });
-
+                    fetch("/taxa/verificarSeTem", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            idServer: json.id
+                        })
+                    }).then((res) => {
+                        if(res.ok){
+                           res.json().then((dados) => {
+                                if (dados == 0){
+                                    console.log("Não tem taxa")
+                                     setTimeout(function () {
+                                         window.location = "../Formulario/index.html";
+                                     }, 1000); 
+                                }else if (dados == 1){
+                                    console.log("tem taxa")
+                                setTimeout(function () {
+                                    window.location = "../dashboard/index/index.html";
+                                }, 1000);
+                                }
+                           })
+                           
+                        }else if(!res.ok){
+                            console.log("deu erro pra ver se ele tem taxa")
+                            res.text.then(texto => {
+                                console.error(texto)
+                            })                          
+                        }
+                    }).catch((erro) => {
+                        console.log("erro")
+                        console.log( erro)
+                    })
+            });
+     
             } else {
 
                 console.log("Houve um erro ao tentar realizar o login!");
@@ -124,15 +151,15 @@
                 });
             }
 
-        }).catch(function (erro) {
-            console.log(erro);
+        }).catch(function (err) {
+            console.log(err);
         })
 
         return false;
     }
 
-    function sumirMensagem() {
-        cardErro.style.display = "none"
-    }
+    // function sumirMensagem() {
+    //     cardErro.style.display = "none"
+    // }
 
 </script>
