@@ -1,7 +1,7 @@
 var taxaModel = require("../models/taxaModel")
 
 function adicionarTaxa(req, res){ 
-    var id = req.body.idServer;
+    let id = req.body.idServer;
     var peso = req.body.pesoServer;
     var altura = req.body.alturaServer;
     var idade = req.body.idadeServer;
@@ -54,7 +54,7 @@ function adicionarTaxa(req, res){
 }
 
 function verificarSeTemController(req, res){
-    var id = req.body.idServer;
+    let id = req.params.idServer;
    
     if (id == undefined){
         return console.log("Id undefined")
@@ -71,7 +71,26 @@ function verificarSeTemController(req, res){
     })
 }
 
+function pegarMetaController(req, res){
+    let id = req.params.idServer;
+    // if (id == undefined){
+    //      res.status(400).json("Id está undefined")
+    //     return console.log("Id undefined")
+    // }
+
+    taxaModel.pegarMeta(id).then((resultado) => {
+        res.status(200).json(resultado[0].taxa_metabolica)
+        console.log("deu certo")
+    }).catch((erro) => {
+        res.status(400).json("deu erro")
+        console.log(erro);
+        console.log(erro.sqlMessage)
+        res.status(500).json(erro.sqlMessage);
+    })
+}
+
 module.exports = {
     adicionarTaxa,
-    verificarSeTemController
+    verificarSeTemController,
+    pegarMetaController
 }

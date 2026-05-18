@@ -1,20 +1,45 @@
 var database = require("../database/config");
 
-function adicionarComida(){
+function pegarComida(id){
+    let instrucao = `SELECT nome, calorias, id FROM comida WHERE fk_usuario = ${id};`;
+    console.log("executando instrução de pegar comida");
 
+    return database.executar(instrucao); 
 }
 
-function autenticar(email, senha) {
-    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
-    var instrucaoSql = `
-        SELECT id, nome, email FROM usuario WHERE email = '${email}' AND senha = '${senha}';
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+function adicionarComida(nome, calorias, id_usuario){
+    let instrucao = `INSERT INTO comida(nome, calorias, fk_usuario) VALUES ("${nome}", ${calorias}, ${id_usuario})`;
+
+    console.log("executando instrução de adicionar comida")
+    return database.executar(instrucao);
 }
 
+function atualizarComida(nome, caloria, idComida, idUsuario){
 
+    if (nome && caloria){
+        let instrucao = `UPDATE comida SET nome = "${nome}", calorias = ${caloria}, atualizado_em = NOW() WHERE id = ${idComida} AND fk_usuario = ${idUsuario}`;
+
+        return database.executar(instrucao)
+    } else if (nome){
+        let instrucao = `UPDATE comida SET nome = "${nome}", atualizado_em = NOW() WHERE id = ${idComida} AND fk_usuario = ${idUsuario}`;
+
+        return database.executar(instrucao);
+    } else if (caloria){
+        let instrucao = `UPDATE comida SET calorias = ${caloria}, atualizado_em = NOW() WHERE id = ${idComida} AND fk_usuario = ${idUsuario}`;
+
+        return database.executar(instrucao);
+    }
+}
+
+function deletarComida(idComida){
+    let instrucao = `DELETE FROM comida WHERE id = ${idComida}`;
+
+    return database.executar(instrucao);
+}
 
 module.exports = {
-    
+    pegarComida,
+    adicionarComida,
+    atualizarComida,
+    deletarComida
 };

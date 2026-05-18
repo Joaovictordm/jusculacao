@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-     <link rel="stylesheet" href="./style/styleConfig.css">
-      <link rel="stylesheet" href="./style/style.css">
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./style/styleConfig.css">
+    <link rel="stylesheet" href="./style/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="containerScreen">
         <aside class="containerSide">
-            <span class="titleName">Olá${nome}</span>
-           <div class="screen1">
+            <span class="titleName">Olá <span id="nome_span"></span></span>
+            <div class="screen1">
                 <img src="../../IMGs/stats-chart-outline.svg">
                 <span>Dashboard</span>
-           </div>
+            </div>
 
-           <div class="screen" onclick="window.location.href = '../add-food/index.html'">
+            <div class="screen" onclick="window.location.href = '../add-food/index.html'">
                 <img src="../../IMGs/add-sharp.svg">
                 <span>Nova comida</span>
-           </div>
+            </div>
 
-           <div class="exit" onclick="window.location.href = '../../index.html'">
+            <div class="exit" onclick="window.location.href = '../../index.html'">
                 <img src="../../IMGs/arrow-back.svg">
                 <span>Sair</span>
-           </div>
+            </div>
         </aside>
 
         <div class="containerDashboard">
@@ -34,7 +36,7 @@
                     <div class="kpi">
                         <div class="containerImg"><img src="../../IMGs/alvo.png"></div>
                         <span class="title">Meta</span>
-                        <span class="desc">1000 calorias</span>
+                        <span class="desc" id="descricao_value"></span>
                     </div>
 
                     <div class="kpi">
@@ -45,7 +47,7 @@
                 </div>
 
                 <div class="containerChart">
-                        <canvas id="grafico" class="graficoStyle"></canvas>
+                    <canvas id="grafico" class="graficoStyle"></canvas>
                 </div>
 
                 <div class="containerAdicionar">
@@ -74,46 +76,65 @@
                     </select>
 
                     <span class="spanTitle">Peso em gramas</span>
-                    <input class="input" placeholder="g" >
+                    <input class="input" placeholder="g">
                     <button class="button">Contabilizar</button>
                 </div>
             </div>
 
-            
+
         </div>
     </div>
 </body>
+
 </html>
 
 <script>
-        var sensorAnalogico = new Chart(document.getElementById('grafico').getContext('2d'), {
-            type: 'bar',
-            data: {
-                datasets: [{
-                    label: 'Calorias',
-                    borderWidth: 3,
-                    fill: true
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    },
-                    y: {
-                        min: 0,   
-                        max: 40,
-                        title: {
-                            display: true,
-                            text: '(C°)'
-                        },
-                        beginAtZero: true,
-                    },
-                },
-            }
+    nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+
+    fetch(`/taxa/pegarTaxa/${sessionStorage.ID_USUARIO}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then((resposta) => {
+            resposta.json().then((dados) => {
+               console.log(dados)
+               descricao_value.innerHTML = `${dados} Calorias`;
+            })
+        })
+        .catch((erro) => {
+            console.log(erro);
         });
 
-    </script>
+    var sensorAnalogico = new Chart(document.getElementById('grafico').getContext('2d'), {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'Calorias',
+                borderWidth: 3,
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    min: 0,
+                    max: 40,
+                    title: {
+                        display: true,
+                        text: '(C°)'
+                    },
+                    beginAtZero: true,
+                },
+            },
+        }
+    });
+
+</script>
 </body>
 
 </html>

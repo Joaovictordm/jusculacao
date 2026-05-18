@@ -9,8 +9,11 @@ router.post("/adicionar", (req, res) => {
     taxaController.adicionarTaxa(req, res)
 } )
 
-router.post("/verificarSeTem", (req, res) => {
+router.get("/verificarSeTem/:idServer", (req, res) => {
     taxaController.verificarSeTemController(req, res)
+} )
+router.get("/pegarTaxa/:idServer", (req, res) => {
+    taxaController.pegarMetaController(req, res)
 } )
 
 

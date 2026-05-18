@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-     <link rel="stylesheet" href="./style/styleConfig.css">
-      <link rel="stylesheet" href="./style/style.css">
-      <link rel="stylesheet" href="../index/index.html">
+    <link rel="stylesheet" href="./style/styleConfig.css">
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="../index/index.html">
 </head>
+
 <body>
     <div class="containerScreen">
         <aside class="containerSide">
-            <span class="titleName">Olá${nome}</span>
-           <div class="screen1"  onclick="window.location.href = '../index/index.html'">
+            <span class="titleName">Olá <span id="nome_span"></span></span>
+            <div class="screen1" onclick="window.location.href = '../index/index.html'">
                 <img src="../../IMGs/stats-chart-outline.svg">
                 <span>Dashboard</span>
-           </div>
+            </div>
 
-           <div class="screen">
+            <div class="screen">
                 <img src="../../IMGs/add-sharp.svg">
                 <span>Nova comida</span>
-           </div>
+            </div>
 
-           <div class="exit" onclick="window.location.href = '../../index.html'">
+            <div class="exit" onclick="window.location.href = '../../index.html'">
                 <img src="../../IMGs/arrow-back.svg">
                 <span>Sair</span>
-           </div>
+            </div>
         </aside>
 
         <div class="containerDashboard">
@@ -48,32 +50,21 @@
             <div class="containerAddFood">
                 <span class="title">Deletar uma comida</span>
                 <span class="desc">Nome</span>
-                <select >
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                    </select>
+                <select>
+                    <option>Batata</option>
+                    <option>Arroz</option>
+                    <option>Carne bovina</option>
+                    <option>Batata</option>
+                </select>
                 <button>Deletar</button>
             </div>
         </div>
     </div>
 </body>
+
 </html>
+<script>
+    nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+
+    
+</script>

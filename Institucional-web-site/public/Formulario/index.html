@@ -10,7 +10,7 @@
 <body>
     <div class="containerForm">
          <div class="containerTitle">
-            <span>Olá </span>
+            <span>Olá <spa id="nome_span"></spa></span>
          </div>
 
          <div class="containerDesc">
@@ -73,6 +73,8 @@
 </body>
 </html>
 <script>
+nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+
 
   function cadastrar() {
     // aguardar();

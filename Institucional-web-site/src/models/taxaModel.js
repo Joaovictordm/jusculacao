@@ -24,7 +24,15 @@ function verificarSeTem(id){
     return database.executar(instrucao)
 }
 
+function pegarMeta(id){
+    let instrucao = `SELECT taxa_metabolica FROM taxa_metabolica WHERE id_usuario = ${id}`;
+
+    console.log(database.executar(instrucao));
+    return database.executar(instrucao);
+}
+
 module.exports = {
     adicionarTaxa,
-    verificarSeTem
+    verificarSeTem,
+    pegarMeta
 };
