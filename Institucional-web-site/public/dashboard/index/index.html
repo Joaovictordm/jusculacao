@@ -24,7 +24,7 @@
                 <span>Nova comida</span>
             </div>
 
-            <div class="exit" onclick="window.location.href = '../../index.html'">
+            <div class="exit" onclick="chamarLimparSessao()">
                 <img src="../../IMGs/arrow-back.svg">
                 <span>Sair</span>
             </div>
@@ -42,7 +42,7 @@
                     <div class="kpi">
                         <div class="containerImg"><img src="../../IMGs/fast-food-black.svg"></div>
                         <span class="title">Faltam</span>
-                        <span class="desc">250 calorias</span>
+                        <span class="desc" id="restam_span"></span>
                     </div>
                 </div>
 
@@ -51,33 +51,12 @@
                 </div>
 
                 <div class="containerAdicionar">
-                    <select class="select">
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
-                        <option>Arroz</option>
-                        <option>Carne bovina</option>
-                        <option>Batata</option>
+                    <select class="select" id="select_comida">
                     </select>
 
                     <span class="spanTitle">Peso em gramas</span>
-                    <input class="input" placeholder="g">
-                    <button class="button">Contabilizar</button>
+                    <input class="input" placeholder="g" id="peso_comida">
+                    <button class="button" onclick="chamarAdicionarNaMeta()">Contabilizar</button>
                 </div>
             </div>
 
@@ -90,6 +69,27 @@
 
 <script>
     nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+    let listaComida = [];
+    let listaId = [];
+    let listaCaloria = [];
+    let verificarSeTemMeta = false;
+
+
+    fetch(`/comidaMetaDia/verQuantoFalta/${sessionStorage.ID_USUARIO}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then((resposta) => {
+            resposta.json().then((dados) => {
+                restam_span.innerHTML = `${dados} Calorias`;
+            })
+        })
+        .catch((erro) => {
+            console.log(erro);
+        });
+
 
     fetch(`/taxa/pegarTaxa/${sessionStorage.ID_USUARIO}`, {
         method: "GET",
@@ -99,13 +99,150 @@
     })
         .then((resposta) => {
             resposta.json().then((dados) => {
-               console.log(dados)
-               descricao_value.innerHTML = `${dados} Calorias`;
+                descricao_value.innerHTML = `${dados} Calorias`;
             })
         })
         .catch((erro) => {
             console.log(erro);
         });
+
+    fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then(function (resposta) {
+            console.log("resposta: ", resposta);
+
+            resposta.json().then((dados) => {
+                listaComida = dados.listaComida;
+                for (let i = 0; i < listaComida.length; i++) {
+                    select_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                    listaId[i] = dados.resposta[i].id;
+                    listaCaloria[i] = dados.resposta[i].calorias_por_grama;
+                }
+            })
+
+        })
+        .catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
+
+    fetch(`/meta_dia/pegarMeta/${sessionStorage.ID_USUARIO}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then(function (resposta) {
+            console.log("resposta: ", resposta);
+            resposta.json().then((dados) => {
+                console.log("aaaaaaa", dados);
+                verificarSeTemMeta = dados;
+            })
+
+        })
+        .catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
+
+
+        if (new Date().getHours() == 0 || !verificarSeTemMeta) {
+        fetch("/meta_dia/criarMeta_dia", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                console.log("comida adiciona na tabela")
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+    }else{
+        console.log("Não precisa criar mais uma meta para hoje")
+    }
+
+
+    function chamarLimparSessao() {
+        sessionStorage.clear();
+        window.location = "../../index.html";
+    }
+
+    function dataHoje() {
+        let dia = new Date().getDate();
+        let mes = new Date().getMonth();
+        let ano = new Date().getFullYear();
+        let data = `${ano}-${mes + 1}-${dia}`
+        return data;
+    }
+
+
+
+    function chamarAdicionarNaMeta() {
+        let data = dataHoje();
+        let contagem = Number(peso_comida.value);
+        let comida = select_comida.value;
+        let caloria = 0;
+        let id = 0;
+
+        for (let i = 0; i < listaComida.length; i++) {
+            if (comida == listaComida[i]) {
+                id = listaId[i];
+                caloria = listaCaloria[i]
+                break;
+            }
+        }
+
+        let caloriaTotal = contagem * caloria;
+        console.log(data, "aaaaaaaaaa")
+
+        fetch("/meta_dia/atualizar_meta_dia", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idUserServer: sessionStorage.ID_USUARIO,
+                idMetaServer: data,
+                contagemServer: caloriaTotal
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                console.log("contagem feita com sucesso")
+                fetch("/comidaMetaDia/adicionarComidaMetaDia", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        idUserServer: sessionStorage.ID_USUARIO,
+                        idComidaServer: id
+                    }),
+                })
+                    .then(function (resposta) {
+                        console.log("resposta: ", resposta);
+                        console.log("comida adiciona na tabela")
+                    })
+                    .catch(function (resposta) {
+                        console.log(`#ERRO: ${resposta}`);
+                    });
+
+
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+            
+        location.reload()
+    }
 
     var sensorAnalogico = new Chart(document.getElementById('grafico').getContext('2d'), {
         type: 'bar',
@@ -135,6 +272,3 @@
     });
 
 </script>
-</body>
-
-</html>

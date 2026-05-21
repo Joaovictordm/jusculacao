@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./style/styleConfig.css">
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="../index/index.html">
+    <script src="../../js//sessao.js"></script>
 </head>
 
 <body>
@@ -24,7 +25,7 @@
                 <span>Nova comida</span>
             </div>
 
-            <div class="exit" onclick="window.location.href = '../../index.html'">
+            <div class="exit" onclick="chamarLimparSessao()">
                 <img src="../../IMGs/arrow-back.svg">
                 <span>Sair</span>
             </div>
@@ -34,29 +35,31 @@
             <div class="containerAddFood">
                 <span class="title">Adicionar uma nova comiada</span>
                 <span class="desc">Nome</span>
-                <input>
+                <input id="ipt_nome_adicionar">
                 <span class="desc">Calorias em 100 gramas</span>
-                <input>
-                <button>Adicionar</button>
+                <input id="ipt_calorias_adicionar">
+                <button onclick="chamarAdicionarComida()">Adicionar</button>
+                <span id="span_erro_adicionar"></span>
             </div>
             <div class="containerAddFood">
                 <span class="title">Editar uma comida</span>
                 <span class="desc">Nome</span>
-                <input>
+                <select id="select_editar_comida">
+
+                </select>
                 <span class="desc">Calorias em 100 gramas</span>
-                <input>
-                <button>Editar</button>
+                <input id="ipt_caloria">
+                <button onclick="chamarAtualizarComida()">Editar</button>
+                <span id="span_erro_editar"></span>
             </div>
             <div class="containerAddFood">
                 <span class="title">Deletar uma comida</span>
                 <span class="desc">Nome</span>
-                <select>
-                    <option>Batata</option>
-                    <option>Arroz</option>
-                    <option>Carne bovina</option>
-                    <option>Batata</option>
+                <select id="select_deletar_comida">
+                   
                 </select>
-                <button>Deletar</button>
+                <button onclick="chamarDeletarComida()">Deletar</button>
+                <span id="span_erro_deletar"></span>
             </div>
         </div>
     </div>
@@ -65,6 +68,142 @@
 </html>
 <script>
     nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+    let listaComida = [];
+    let listaId = [];
 
-    
+    fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then(function (resposta) {
+            console.log("resposta: ", resposta);
+
+            resposta.json().then((dados) => {
+                listaComida = dados.listaComida;
+                for (let i = 0; i < listaComida.length; i++) {
+                    select_editar_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                    select_deletar_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                    listaId[i] = dados.resposta[i].id;
+                }
+            })
+
+        })
+        .catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
+
+    function chamarLimparSessao() {
+        sessionStorage.clear();
+        window.location = "../../index.html";
+    }
+
+    function chamarAdicionarComida() {
+        let nome = ipt_nome_adicionar.value;
+        let caloria = Number(ipt_calorias_adicionar.value);
+        let id = sessionStorage.ID_USUARIO;
+
+        if (nome == "" || caloria == "") {
+            span_erro_adicionar.innerHTML = `Não pode ser vazio`;
+            return;
+        }
+
+        if (isNaN(caloria)) {
+            span_erro_adicionar.innerHTML = `Caloria tem que ser um número`;
+            return;
+        }
+
+        fetch("/comida/adicionarComida", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idUsuarioServer: id,
+                caloriaServer: caloria,
+                nomeServer: nome
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                span_erro_adicionar.innerHTML = `Comida adicionada`;
+               
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+                span_erro_adicionar.innerHTML = `Erro ao adicionar comida`;
+            });
+
+          location.reload()
+
+    }
+
+
+    function chamarAtualizarComida() {
+        let caloria = Number(ipt_caloria.value);
+        let comida = select_editar_comida.value;
+        let id = 0;
+
+        for (let i = 0; i < listaComida.length; i++){
+            if (comida == listaComida[i]){
+                id = listaId[i]
+            }
+        }
+
+        fetch("/comida/atualizarComida", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                caloriaServer: caloria,
+                idComidaServer: id,
+                idUsuarioServer: sessionStorage.ID_USUARIO
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                span_erro_editar.innerHTML = `Comida Atualizada`;
+               
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+                span_erro_editar.innerHTML = `Erro ao atualizar`;
+            });
+         location.reload()
+    }
+
+    function chamarDeletarComida(){
+        let comida = select_deletar_comida.value;
+        let id = 0;
+
+        for (let i = 0; i < listaComida.length; i++){
+            if (comida == listaComida[i]){
+                id = listaId[i]
+            }
+        }
+
+        fetch("/comida/deletarComida", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: id,
+                idUsuarioServer: sessionStorage.ID_USUARIO
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                span_erro_deletar.innerHTML = `Comida deletada`;
+               
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+                span_erro_deletar.innerHTML = `Erro ao deletar`;
+            });
+         location.reload()
+    }
+
 </script>

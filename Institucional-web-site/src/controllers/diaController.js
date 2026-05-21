@@ -1,5 +1,29 @@
 var diaModel = require("../models/diaModel");
 
+function verificarSeTemController(req, res){
+    let idUser = req.params.id;
+
+    if (idUser == undefined){
+        res.status(400).json("Id do usuario está undefined")
+        return console.log("Id undefined")
+    }
+
+    diaModel.verificarSeTemMeta(idUser).then((resposta) => {
+        if (resposta.length == 0){
+            console.log(resposta, "não tem meta");
+            res.status(200).json(false);
+        }else {
+            console.log(resposta, "já tem meta");
+            res.status(200).json(true);
+        }
+
+    }).catch((erro) => {
+        console.log(erro);
+        console.log(erro.sqlMessage)
+        res.status(500).json(erro.sqlMessage);
+    })
+}
+
 function criarMetaDiaController(req, res) {
     let idUser = req.body.idServer;
 
@@ -74,6 +98,7 @@ function tirarCaloriaController(req, res){
 
 }
 module.exports = {
+    verificarSeTemController,
     criarMetaDiaController,
     atualizarMetaDiaController,
     tirarCaloriaController

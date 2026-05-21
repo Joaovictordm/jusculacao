@@ -18,8 +18,9 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var taxaRouter = require("./src/routes/taxa.js");
-var comidaRouter = require("./src/routes/comida.js")
-var diaRouter = require("./src/routes/meta_dia.js")
+var comidaRouter = require("./src/routes/comida.js");
+var diaRouter = require("./src/routes/meta_dia.js");
+var comidaMetaDiaRouter = require("./src/routes/comidaMetaDia.js");
 
 
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/taxa", taxaRouter);
 app.use("/comida", comidaRouter);
 app.use("/meta_dia", diaRouter);
+app.use("/comidaMetaDia", comidaMetaDiaRouter);
 
 
 app.listen(PORTA_APP, function () {

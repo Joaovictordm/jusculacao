@@ -25,6 +25,7 @@ function pegarComidaController (req, res){
 function adicionarComidaController(req, res){
     let idUsuario = req.body.idUsuarioServer;
     let caloria = req.body.caloriaServer;
+    let caloriaPerGrama = caloria / 100;
     let nome = req.body.nomeServer
 
     if (idUsuario == undefined){
@@ -38,7 +39,7 @@ function adicionarComidaController(req, res){
         return console.log("nome undefined")
     }
 
-    comidaModel.adicionarComida(nome, caloria, idUsuario).then((resposta) => {
+    comidaModel.adicionarComida(nome, caloriaPerGrama, idUsuario).then((resposta) => {
         res.status(200).json(resposta)
         console.log(resposta,"Comida adicionada")
     }).catch((erro) => {
@@ -51,6 +52,7 @@ function adicionarComidaController(req, res){
 function atualizarComidaController(req, res){
     let nome = req.body.nomeServer;
     let calorias = req.body.caloriaServer;
+    let caloriaPerGrama = calorias / 100;
     let idComida = req.body.idComidaServer;
     let idUsuario = req.body.idUsuarioServer
     
@@ -85,13 +87,14 @@ function atualizarComidaController(req, res){
 
 function deletarComidaController(req, res){
     let idComida = req.body.idServer;
+    let idUsuario = req.body.idUsuarioServer;
 
     if (idComida == undefined){
         res.status(400).json("idCOmida está undefined")
         return console.log("IdComida undefined")
     }
 
-    comidaModel.deletarComida(idComida).then((resposta) => {
+    comidaModel.deletarComida(idComida, idUsuario).then((resposta) => {
         res.status(200).json(resposta);
         console.log("COmida deletada com sucesso");
     }).catch((erro) => {
