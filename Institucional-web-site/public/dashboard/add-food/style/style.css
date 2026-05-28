@@ -200,3 +200,60 @@
     color: rgb(0, 0, 0);
       border-radius: 0.8rem;
 }
+
+.cardDeuBom {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(247, 247, 247);
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.cardDeuBom .parteDeCima{
+    background-color: rgb(23, 207, 50);
+    padding: 1rem;
+}
+
+.cardDeuBom span{
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.cardDeuBom img{
+    width: 20rem;
+    height: 20rem;
+}
+
+
+.cardDeuRuim {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(247, 247, 247);
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.cardDeuRuim .parteDeCima{
+    background-color: rgb(207, 23, 23);
+    padding: 1rem;
+}
+
+.cardDeuRuim span{
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.cardDeuRuim img{
+    width: 20rem;
+    height: 20rem;
+}
+
+.cardConfirmacao {
+    position: absolute;
+}

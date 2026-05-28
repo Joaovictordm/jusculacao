@@ -16,23 +16,6 @@ CONSTRAINT pk_usuario PRIMARY KEY(id)
 );
 
 SELECT * FROM usuario;
-SELECT * FROM taxa_metabolica;
-
-SELECT 
-CASE WHEN id_usuario IS NULL THEN false
-	WHEN id_usuario IS NOT NULL THEN true
-    END AS situacao 
-FROM usuario AS us
-LEFT JOIN taxa_metabolica AS tx ON tx.id_usuario = us.id
-WHERE  id = 2;
-
-SELECT * FROM usuario AS us
-LEFT JOIN taxa_metabolica AS tx ON tx.id_usuario = us.id;
-
-SELECT * FROM usuario
-LEFT JOIN taxa_metabolica ON id_usuario = id;
-
-SELECT taxa_metabolica FROM taxa_metabolica WHERE id_usuario = 2;
 
 DROP TABLE IF EXISTS taxa_metabolica;
 CREATE TABLE taxa_metabolica(
@@ -57,16 +40,11 @@ CONSTRAINT pk_taxa PRIMARY KEY(id_usuario),
 CONSTRAINT fk_usuario_taxa FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
-INSERT INTO comida(nome, calorias, fk_usuario) VALUES ("abacate", 200, 1);
-SELECT nome, calorias FROM comida WHERE fk_usuario = 1;
-SELECT * FROM comida;
-UPDATE comida SET nome = "aaaa", calorias = 300 WHERE id = 2 AND fk_usuario = 1;
-
 DROP TABLE IF EXISTS comida;
 CREATE TABLE comida(
 id INT AUTO_INCREMENT,
 nome VARCHAR(45) NOT NULL,
-calorias INT NOT NULL,
+calorias_por_grama INT NOT NULL,
 fk_usuario INT,
 criado_em DATETIME DEFAULT NOW(),
 atualizado_em DATETIME DEFAULT NULL,
@@ -75,9 +53,6 @@ atualizado_em DATETIME DEFAULT NULL,
 CONSTRAINT pk_comida PRIMARY KEY (id),
 CONSTRAINT fk_usuario_comida FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
 );
-
-DROP TABLE comida;
-
 
 DROP TABLE IF EXISTS meta_dia;
 CREATE TABLE meta_dia(
@@ -91,19 +66,49 @@ CONSTRAINT pk_meta PRIMARY KEY (id_usuario, id_meta),
 CONSTRAINT fk_usuario_meta FOREIGN KEY (id_usuario)REFERENCES usuario (id)
 );
 
-INSERT INTO meta_dia(id_usuario, id_meta, contagem_atual) VALUES (1, CURDATE(), 0);
-SELECT * FROM meta_dia;
 
 DROP TABLE IF EXISTS comidas_meta_dia;
 CREATE TABLE comidas_meta_dia(
-id_comidas_meta_dia INT AUTO_INCREMENT,
-fk_meta_comida DATE,
-fk_comida INT,
-created_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
-updated_at DATETIME NOT NULL,
+    id_comidas_meta_dia INT AUTO_INCREMENT,
+    fk_usuario INT,
+    fk_meta_dia DATE,
+    fk_comida INT,
+    peso_adicionado DECIMAL(10, 2),
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME DEFAULT NULL,
 
-CONSTRAINT pk_comidas_meta_dia PRIMARY KEY (id_comidas_meta_dia, fk_comida, fk_meta_comida),
-CONSTRAINT fk_meta_comida FOREIGN KEY (fk_meta_comida) REFERENCES meta_dia(id_meta),
-CONSTRAINT fk_comida FOREIGN KEY (fk_comida) REFERENCES comida(id)
+    
+    CONSTRAINT pk_comidas_meta_dia PRIMARY KEY (id_comidas_meta_dia, fk_comida, fk_meta_dia, fk_usuario),
+    CONSTRAINT fk_meta_comida FOREIGN KEY (fk_usuario, fk_meta_dia) REFERENCES meta_dia(id_usuario, id_meta),
+    CONSTRAINT fk_comida FOREIGN KEY (fk_comida) REFERENCES comida(id) ON DELETE CASCADE
 );
+
+SELECT * FROM meta_dia;
+SELECT * FROM comidas_meta_dia;
+
+/*View para mostrar o historico de comidas de hoje*/
+CREATE OR REPLACE VIEW vw_historico_comidas
+AS
+SELECT us.id AS id_usuario, mt.id_meta AS dia, co.nome, co.id AS id_comida, cmd.id_comidas_meta_dia AS id_meta_comida, cmd.peso_adicionado AS peso FROM usuario AS us
+JOIN meta_dia AS mt ON us.id = mt.id_usuario
+JOIN comidas_meta_dia AS cmd ON cmd.fk_usuario = us.id AND cmd.fk_meta_dia = mt.id_meta
+JOIN comida AS co ON  cmd.fk_comida = co.id
+WHERE mt.id_meta = CURDATE();
+
+/*View para mostrar as comidas adicionadas hoje*/
+CREATE OR REPLACE VIEW vw_historico_grafico_dia_hojeD
+AS
+SELECT us.id AS id,us.nome AS nome_usuario, co.id AS id_comida ,co.nome AS nome_comida, co.calorias_por_grama AS calorias, mt.contagem_atual AS contagem_atual,cmd.peso_adicionado AS historico_de_calorias, mt.id_meta AS dia FROM usuario AS us 
+INNER JOIN comida AS co ON us.id = co.fk_usuario
+INNER JOIN meta_dia AS mt ON us.id = mt.id_usuario
+INNER JOIN comidas_meta_dia AS cmd ON us.id = cmd.fk_usuario AND co.id = cmd.fk_comida AND cmd.fk_meta_dia = mt.id_meta 
+WHERE mt.id_meta = CURDATE();
+
+
+/*View para mostrar o historico de calorias*/
+CREATE OR REPLACE VIEW vw_historico_calorias
+AS
+SELECT us.id AS id_usuario ,mt.id_meta AS dia, mt.contagem_atual AS calorias_dia  FROM usuario AS us 
+INNER JOIN meta_dia AS mt ON us.id = mt.id_usuario
+GROUP BY us.id, mt.id_meta, mt.contagem_atual;
 

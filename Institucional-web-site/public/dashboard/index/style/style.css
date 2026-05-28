@@ -26,6 +26,7 @@
     height: 5rem;
     width: 20rem;
     background-color: rgb(134, 133, 133);
+    /* background-color: rgb(67, 67, 67); */
     border-radius: 1rem;
     display: flex;
     justify-content: center;
@@ -155,7 +156,7 @@
 
 .containerScreen .containerDashboard .containerBodyDashboard .containerKpis .kpi{
     background-color: rgb(209, 209, 209);
-    width: 20rem;
+    width: 30rem;
     padding: 2rem;
     border-radius: 2rem;
     display: flex;
@@ -256,4 +257,52 @@
 .containerScreen .containerDashboard .containerBodyDashboard .containerAdicionar .button:active{
     cursor: pointer;
     transform: scale(0.9);
+}
+
+.cardDeuBom .parteDeCima{
+    background-color: rgb(23, 207, 50);
+    padding: 1rem;
+}
+
+.cardDeuBom span{
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.cardDeuBom img{
+    width: 20rem;
+    height: 20rem;
+}
+
+
+.cardDeuRuim {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(247, 247, 247);
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.cardDeuRuim .parteDeCima{
+    background-color: rgb(207, 23, 23);
+    padding: 1rem;
+}
+
+.cardDeuRuim span{
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.cardDeuRuim img{
+    width: 20rem;
+    height: 20rem;
+}
+
+.containerDeleteAndAdd{
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
 }

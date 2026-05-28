@@ -31,7 +31,7 @@
             </div>
         </aside>
 
-        <div class="containerDashboard">
+        <div class="containerDashboard" id="cardConfirmacao">
             <div class="containerAddFood">
                 <span class="title">Adicionar uma nova comiada</span>
                 <span class="desc">Nome</span>
@@ -56,154 +56,181 @@
                 <span class="title">Deletar uma comida</span>
                 <span class="desc">Nome</span>
                 <select id="select_deletar_comida">
-                   
+
                 </select>
                 <button onclick="chamarDeletarComida()">Deletar</button>
                 <span id="span_erro_deletar"></span>
             </div>
         </div>
     </div>
+
+    <!-- <div class="cardDeuBom">
+        <div class="parteDeCima">
+            <span>Login feito com sucesso</span>
+        </div>
+        <img src="../../IMGs/check-Photoroom.png">
+    </div> -->
+
+    <!-- <div class="cardDeuRuim">
+        <div class="parteDeCima">
+            <span>Login deu erro</span>
+        </div>
+        <img src="../../IMGs/erro (4)-Photoroom.png">
+    </div> -->
+
 </body>
 
 </html>
 <script>
-    nome_span.innerHTML = sessionStorage.NOME_USUARIO;
-    let listaComida = [];
-    let listaId = [];
+    if (sessionStorage.ID_USUARIO == undefined) {
+        window.location = "../../avisos/paginaNotFound/index.html";
 
-    fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    } else {
+
+
+        nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+        let listaComida = [];
+        let listaId = [];
+
+        fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                resposta.json().then((dados) => {
+                    listaComida = dados.listaComida;
+                    for (let i = 0; i < listaComida.length; i++) {
+                        select_editar_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                        select_deletar_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                        listaId[i] = dados.resposta[i].id;
+                    }
+                })
+
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+
+        function chamarLimparSessao() {
+            sessionStorage.clear();
+            window.location = "../../index.html";
         }
-    })
-        .then(function (resposta) {
-            console.log("resposta: ", resposta);
 
-            resposta.json().then((dados) => {
-                listaComida = dados.listaComida;
-                for (let i = 0; i < listaComida.length; i++) {
-                    select_editar_comida.innerHTML += `<option>${listaComida[i]}</option>`
-                    select_deletar_comida.innerHTML += `<option>${listaComida[i]}</option>`
-                    listaId[i] = dados.resposta[i].id;
+        function chamarAdicionarComida() {
+            let nome = ipt_nome_adicionar.value;
+            let caloria = Number(ipt_calorias_adicionar.value);
+            let id = sessionStorage.ID_USUARIO;
+
+            if (nome == "" || caloria == "") {
+                span_erro_adicionar.innerHTML = `Não pode ser vazio`;
+                return;
+            }
+
+            if (isNaN(caloria)) {
+                span_erro_adicionar.innerHTML = `Caloria tem que ser um número`;
+                return;
+            }
+
+            fetch("/comida/adicionarComida", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idUsuarioServer: id,
+                    caloriaServer: caloria,
+                    nomeServer: nome
+                }),
+            })
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    span_erro_adicionar.innerHTML = `<span style="color: green;"><strong>Comida adicionada</strong></span>`;
+
+                    setTimeout(() => {
+                        location.reload()
+                    }, "1000");
+
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                    span_erro_adicionar.innerHTML = `Erro ao adicionar comida`;
+                });
+
+        }
+
+
+        function chamarAtualizarComida() {
+            let caloria = Number(ipt_caloria.value);
+            let comida = select_editar_comida.value;
+            let id = 0;
+
+            for (let i = 0; i < listaComida.length; i++) {
+                if (comida == listaComida[i]) {
+                    id = listaId[i]
                 }
-            })
-
-        })
-        .catch(function (resposta) {
-            console.log(`#ERRO: ${resposta}`);
-        });
-
-    function chamarLimparSessao() {
-        sessionStorage.clear();
-        window.location = "../../index.html";
-    }
-
-    function chamarAdicionarComida() {
-        let nome = ipt_nome_adicionar.value;
-        let caloria = Number(ipt_calorias_adicionar.value);
-        let id = sessionStorage.ID_USUARIO;
-
-        if (nome == "" || caloria == "") {
-            span_erro_adicionar.innerHTML = `Não pode ser vazio`;
-            return;
-        }
-
-        if (isNaN(caloria)) {
-            span_erro_adicionar.innerHTML = `Caloria tem que ser um número`;
-            return;
-        }
-
-        fetch("/comida/adicionarComida", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idUsuarioServer: id,
-                caloriaServer: caloria,
-                nomeServer: nome
-            }),
-        })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                span_erro_adicionar.innerHTML = `Comida adicionada`;
-               
-            })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-                span_erro_adicionar.innerHTML = `Erro ao adicionar comida`;
-            });
-
-          location.reload()
-
-    }
-
-
-    function chamarAtualizarComida() {
-        let caloria = Number(ipt_caloria.value);
-        let comida = select_editar_comida.value;
-        let id = 0;
-
-        for (let i = 0; i < listaComida.length; i++){
-            if (comida == listaComida[i]){
-                id = listaId[i]
             }
+
+            fetch("/comida/atualizarComida", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    caloriaServer: caloria,
+                    idComidaServer: id,
+                    idUsuarioServer: sessionStorage.ID_USUARIO
+                }),
+            })
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    span_erro_editar.innerHTML = `<span style="color: green;"><strong>Comida Editada com sucesso</strong></span>`;
+                    setTimeout(() => {
+                        location.reload()
+                    }, "1000");
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                    span_erro_editar.innerHTML = `Erro ao atualizar`;
+                });
         }
 
-        fetch("/comida/atualizarComida", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                caloriaServer: caloria,
-                idComidaServer: id,
-                idUsuarioServer: sessionStorage.ID_USUARIO
-            }),
-        })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                span_erro_editar.innerHTML = `Comida Atualizada`;
-               
-            })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-                span_erro_editar.innerHTML = `Erro ao atualizar`;
-            });
-         location.reload()
-    }
+        function chamarDeletarComida() {
+            let comida = select_deletar_comida.value;
+            let id = 0;
 
-    function chamarDeletarComida(){
-        let comida = select_deletar_comida.value;
-        let id = 0;
-
-        for (let i = 0; i < listaComida.length; i++){
-            if (comida == listaComida[i]){
-                id = listaId[i]
+            for (let i = 0; i < listaComida.length; i++) {
+                if (comida == listaComida[i]) {
+                    id = listaId[i]
+                }
             }
-        }
 
-        fetch("/comida/deletarComida", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idServer: id,
-                idUsuarioServer: sessionStorage.ID_USUARIO
-            }),
-        })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                span_erro_deletar.innerHTML = `Comida deletada`;
-               
+            fetch("/comida/deletarComida", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idServer: id,
+                    idUsuarioServer: sessionStorage.ID_USUARIO
+                }),
             })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-                span_erro_deletar.innerHTML = `Erro ao deletar`;
-            });
-         location.reload()
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    span_erro_deletar.innerHTML = `<span style="color: green;"><strong>Comida deletada</strong></span>`;
+                    setTimeout(() => {
+                        location.reload()
+                    }, "1000");
+
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                    span_erro_deletar.innerHTML = `Erro ao deletar`;
+                });
+        }
     }
 
 </script>

@@ -63,7 +63,7 @@
                 <option value="ganhar_peso">Ganhar massa</option>
             </Select>
 
-            <div id="div_mensagem"></div>
+            <div id="mensagem_erro"></div>
 
         </div>
         <button onclick="cadastrar()">
@@ -124,15 +124,18 @@ nome_span.innerHTML = sessionStorage.NOME_USUARIO;
         if (resposta.ok) {
           // cardErro.style.display = "block";
           
-          div_mensagem.innerHTML = "Taxa criada com sucesso";
-
+          mensagem_erro.innerHTML = `<span style="color: green;">Taxa criada com sucesso!</span>`;
           setTimeout(() => {
             window.location = "../dashboard/index/index.html";
           }, 2000);
 
         } else {
           throw "Houve um erro";
-          div_mensagem.innerHTML = "Erro ao criar taxa";
+           mensagem_erro.innerHTML = `<span style="color: red;">Deu algum erro para criar a taxa!</span>`;
+
+          setTimeout(() => {
+             location.reload()
+          }, 2000);
         }
       })
       .catch((erro) => {

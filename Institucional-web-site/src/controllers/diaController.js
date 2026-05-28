@@ -73,21 +73,17 @@ function atualizarMetaDiaController(req, res){
 
 function tirarCaloriaController(req, res){
     let id_user = req.body.idUserServer;
-    let id_meta = req.body.idMetaServer;
     let contagem = req.body.contagemServer;
 
     if (id_user == undefined){
         res.status(400).json("Id do usuario está undefined")
         return console.log("Id undefined")
-    }else if(id_meta == undefined){
-        res.status(400).json("Id meta está undefined")
-        return console.log("Id meta undefined")
     }else if(contagem == undefined){
         res.status(400).json("contagem está undefined")
         return console.log("contagem undefined")
     }
 
-    diaModel.tirarCaloria(id_user, id_meta, contagem).then((resposta) => {
+    diaModel.tirarCaloria(id_user, contagem).then((resposta) => {
         console.log("meta atualizada com sucesso");
         res.status(200).json("meta atualizada")
     }).catch((erro) => {

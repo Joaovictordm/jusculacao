@@ -40,8 +40,8 @@
                     </div>
 
                     <div class="kpi">
-                        <div class="containerImg"><img src="../../IMGs/fast-food-black.svg"></div>
-                        <span class="title">Faltam</span>
+                        <div class="containerImg" id="img_container"><img src="../../IMGs/fast-food-black.svg"></div>
+                        <span class="title" id="span_meta_mensagem">Faltam</span>
                         <span class="desc" id="restam_span"></span>
                     </div>
                 </div>
@@ -50,13 +50,22 @@
                     <canvas id="grafico" class="graficoStyle"></canvas>
                 </div>
 
-                <div class="containerAdicionar">
-                    <select class="select" id="select_comida">
-                    </select>
+                <div class="containerDeleteAndAdd">
+                    <div class="containerAdicionar">
+                        <span class="spanTitle">Contabilizar comida</span>
+                        <select class="select" id="select_comida">
+                        </select>
 
-                    <span class="spanTitle">Peso em gramas</span>
-                    <input class="input" placeholder="g" id="peso_comida">
-                    <button class="button" onclick="chamarAdicionarNaMeta()">Contabilizar</button>
+                        <input class="input" placeholder="g" id="peso_comida">
+                        <button class="button" onclick="chamarAdicionarNaMeta()">Contabilizar</button>
+                    </div>
+
+                    <div class="containerAdicionar">
+                        <span class="spanTitle">Remover comida</span>
+                        <select class="select" id="select_comida_deletar">
+                        </select>
+                        <button class="button" onclick="chamarDeletarComida()">remover</button>
+                    </div>
                 </div>
             </div>
 
@@ -68,207 +77,343 @@
 </html>
 
 <script>
-    nome_span.innerHTML = sessionStorage.NOME_USUARIO;
-    let listaComida = [];
-    let listaId = [];
-    let listaCaloria = [];
-    let verificarSeTemMeta = false;
+    if (sessionStorage.ID_USUARIO == undefined) {
+        window.location = "../../avisos/paginaNotFound/index.html";
 
+    } else {
 
-    fetch(`/comidaMetaDia/verQuantoFalta/${sessionStorage.ID_USUARIO}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then((resposta) => {
-            resposta.json().then((dados) => {
-                restam_span.innerHTML = `${dados} Calorias`;
-            })
-        })
-        .catch((erro) => {
-            console.log(erro);
-        });
+        nome_span.innerHTML = sessionStorage.NOME_USUARIO;
+        let listaComida = [];
+        let listaId = [];
+        let listaCaloria = [];
 
+        let ultimosTresDia = [];
+        let ultimosTresCaloriaAqueleDia = [];
+        let verificarSeTemMeta = false;
+        let idGrafico = document.getElementById("grafico").getContext('2d');
+        let taxaDado = 0;
 
-    fetch(`/taxa/pegarTaxa/${sessionStorage.ID_USUARIO}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then((resposta) => {
-            resposta.json().then((dados) => {
-                descricao_value.innerHTML = `${dados} Calorias`;
-            })
-        })
-        .catch((erro) => {
-            console.log(erro);
-        });
+        let historicoComidahoje = [];
 
-    fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then(function (resposta) {
-            console.log("resposta: ", resposta);
-
-            resposta.json().then((dados) => {
-                listaComida = dados.listaComida;
-                for (let i = 0; i < listaComida.length; i++) {
-                    select_comida.innerHTML += `<option>${listaComida[i]}</option>`
-                    listaId[i] = dados.resposta[i].id;
-                    listaCaloria[i] = dados.resposta[i].calorias_por_grama;
-                }
-            })
-
-        })
-        .catch(function (resposta) {
-            console.log(`#ERRO: ${resposta}`);
-        });
-
-    fetch(`/meta_dia/pegarMeta/${sessionStorage.ID_USUARIO}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then(function (resposta) {
-            console.log("resposta: ", resposta);
-            resposta.json().then((dados) => {
-                console.log("aaaaaaa", dados);
-                verificarSeTemMeta = dados;
-            })
-
-        })
-        .catch(function (resposta) {
-            console.log(`#ERRO: ${resposta}`);
-        });
-
-
-        if (new Date().getHours() == 0 || !verificarSeTemMeta) {
-        fetch("/meta_dia/criarMeta_dia", {
-            method: "POST",
+        fetch(`/historico/pegarHistoricoComidaHoje/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idServer: sessionStorage.ID_USUARIO
-            }),
+            }
         })
             .then(function (resposta) {
                 console.log("resposta: ", resposta);
-                console.log("comida adiciona na tabela")
+
+                resposta.json().then((dados) => {
+                    for (let i = 0; i < dados.length; i++) {
+                        historicoComidahoje[i] = {
+                            "dia": dados[i].dia,
+                            "id_comida": dados[i].id_comida,
+                            "nome": dados[i].nome,
+                            "id_comida_meta": dados[i].id_meta_comida,
+                            "caloria": dados[i].peso
+                        }
+                        select_comida_deletar.innerHTML += `<option>${dados[i].nome}</option>`;
+                        console.log("historico", historicoComidahoje)
+                    }
+                })
+
             })
             .catch(function (resposta) {
                 console.log(`#ERRO: ${resposta}`);
             });
-    }else{
-        console.log("Não precisa criar mais uma meta para hoje")
-    }
 
-
-    function chamarLimparSessao() {
-        sessionStorage.clear();
-        window.location = "../../index.html";
-    }
-
-    function dataHoje() {
-        let dia = new Date().getDate();
-        let mes = new Date().getMonth();
-        let ano = new Date().getFullYear();
-        let data = `${ano}-${mes + 1}-${dia}`
-        return data;
-    }
-
-
-
-    function chamarAdicionarNaMeta() {
-        let data = dataHoje();
-        let contagem = Number(peso_comida.value);
-        let comida = select_comida.value;
-        let caloria = 0;
-        let id = 0;
-
-        for (let i = 0; i < listaComida.length; i++) {
-            if (comida == listaComida[i]) {
-                id = listaId[i];
-                caloria = listaCaloria[i]
-                break;
-            }
-        }
-
-        let caloriaTotal = contagem * caloria;
-        console.log(data, "aaaaaaaaaa")
-
-        fetch("/meta_dia/atualizar_meta_dia", {
-            method: "PUT",
+        fetch(`/comidaMetaDia/verQuantoFalta/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idUserServer: sessionStorage.ID_USUARIO,
-                idMetaServer: data,
-                contagemServer: caloriaTotal
-            }),
+            }
         })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                console.log("contagem feita com sucesso")
-                fetch("/comidaMetaDia/adicionarComidaMetaDia", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        idUserServer: sessionStorage.ID_USUARIO,
-                        idComidaServer: id
-                    }),
+            .then((resposta) => {
+                resposta.json().then((dados) => {
+                    if (dados < -100) {
+                        span_meta_mensagem.innerHTML = ``;
+                        img_container.innerHTML = ``;
+                        restam_span.innerHTML = `<span style="color: black"><strong>Você passou muito da sua meta!!</strong></span>`;
+                    } else if (dados < 10) {
+                        span_meta_mensagem.innerHTML = ``;
+                        img_container.innerHTML = ``;
+                        restam_span.innerHTML = ` Você passou da sua meta`;
+                    } else {
+                        restam_span.innerHTML = `${dados.toFixed(2)} Calorias`;
+                    }
+
                 })
-                    .then(function (resposta) {
-                        console.log("resposta: ", resposta);
-                        console.log("comida adiciona na tabela")
+            })
+            .catch((erro) => {
+                console.log(erro);
+            });
+
+
+        fetch(`/taxa/pegarTaxa/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+            .then((resposta) => {
+                resposta.json().then((dados) => {
+                    descricao_value.innerHTML = `${dados} Calorias`;
+                    let max = (Math.round(dados));
+                    if (max < 0){
+                        max = 0;
+                    }
+                    console.log(max, "Maxxxxxxxx")
+                    fetch(`/historico/pegarHistorico/${sessionStorage.ID_USUARIO}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        }
                     })
+                        .then(function (resposta) {
+                            console.log("resposta: ", resposta);
+                            console.log("historico pego com sucesso")
+                            resposta.json().then((dados) => {
+                                let ultimosTres = [];
+                                let contador = 0;
+                                let cont = 0;
+
+                                for (let i = dados.length - 1; i >= 0; i--) {
+                                    contador += 1;
+                                    for (let u = cont; u < dados.length; u++) {
+                                        cont += 1;
+                                        ultimosTresDia[u] = dados[i].dia;
+                                        ultimosTresCaloriaAqueleDia[u] = dados[i].calorias_dia;
+                                        break
+                                    }
+                                    if (contador == 10) {
+                                        break
+                                    }
+                                }
+                                console.log("dia", ultimosTresDia);
+                                console.log("caloria", ultimosTresCaloriaAqueleDia)
+                                const ctx = document.getElementById("grafico")
+
+                                new Chart(ctx, {
+                                    type: "bar",
+                                    data: {
+                                        labels: ultimosTresDia,
+                                        datasets: [{
+                                            label: "Calorias Consumidas",
+                                            data: ultimosTresCaloriaAqueleDia,
+                                            borderWidth: 1,
+                                            backgroundColor: "rgb(67, 67, 67)",
+                                            borderColor: "rgb(67, 67, 67)",
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        scales: {
+                                            y: {
+                                                max: max
+                                            },
+                                        },
+                                    },
+                                })
+                            })
+
+                        })
+
+                })
                     .catch(function (resposta) {
                         console.log(`#ERRO: ${resposta}`);
                     });
 
+            })
+
+            .catch((erro) => {
+                console.log(erro);
+            });
+
+        fetch(`/comida/pegarComida/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                resposta.json().then((dados) => {
+                    listaComida = dados.listaComida;
+                    for (let i = 0; i < listaComida.length; i++) {
+                        select_comida.innerHTML += `<option>${listaComida[i]}</option>`
+                        listaId[i] = dados.resposta[i].id;
+                        listaCaloria[i] = dados.resposta[i].calorias_por_grama;
+                    }
+                })
 
             })
             .catch(function (resposta) {
                 console.log(`#ERRO: ${resposta}`);
             });
-            
-        location.reload()
-    }
 
-    var sensorAnalogico = new Chart(document.getElementById('grafico').getContext('2d'), {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: 'Calorias',
-                borderWidth: 3,
-                fill: true
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    beginAtZero: true
-                },
-                y: {
-                    min: 0,
-                    max: 40,
-                    title: {
-                        display: true,
-                        text: '(C°)'
-                    },
-                    beginAtZero: true,
-                },
-            },
+        fetch(`/meta_dia/pegarMeta/${sessionStorage.ID_USUARIO}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                resposta.json().then((dados) => {
+                    verificarSeTemMeta = dados;
+                    if (new Date().getHours() == 0 || !verificarSeTemMeta) {
+                        fetch("/meta_dia/criarMeta_dia", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                idServer: sessionStorage.ID_USUARIO
+                            }),
+                        })
+                            .then(function (resposta) {
+                                console.log("resposta: ", resposta);
+                                console.log("diacriado na tabela")
+                                location.reload()
+                            })
+                            .catch(function (resposta) {
+                                console.log(`#ERRO: ${resposta}`);
+                            });
+                    } else {
+                        console.log("Não precisa criar mais uma meta para hoje")
+                    }
+                })
+
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+
+
+
+
+        function chamarLimparSessao() {
+            sessionStorage.clear();
+            window.location = "../../index.html";
         }
-    });
 
+        function dataHoje() {
+            let dia = new Date().getDate();
+            let mes = new Date().getMonth();
+            let ano = new Date().getFullYear();
+            let data = `${ano}-${mes + 1}-${dia}`
+            return data;
+        }
+
+
+        function chamarAdicionarNaMeta() {
+            let data = dataHoje();
+            let contagem = Number(peso_comida.value);
+            let comida = select_comida.value;
+            let caloria = 0;
+            let id = 0;
+
+            for (let i = 0; i < listaComida.length; i++) {
+                if (comida == listaComida[i]) {
+                    id = listaId[i];
+                    caloria = listaCaloria[i]
+                    break;
+                }
+            }
+
+            let caloriaTotal = contagem * caloria;
+            console.log(data, "aaaaaaaaaa")
+
+            fetch("/meta_dia/atualizar_meta_dia", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idUserServer: sessionStorage.ID_USUARIO,
+                    idMetaServer: data,
+                    contagemServer: caloriaTotal
+                }),
+            })
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    console.log("contagem feita com sucesso")
+                    fetch("/comidaMetaDia/adicionarComidaMetaDia", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            idUserServer: sessionStorage.ID_USUARIO,
+                            idComidaServer: id,
+                            pesoServer: caloriaTotal
+                        }),
+                    })
+                        .then(function (resposta) {
+                            console.log("resposta: ", resposta);
+                            console.log("comida adiciona na tabela")
+                        })
+                        .catch(function (resposta) {
+                            console.log(`#ERRO: ${resposta}`);
+                        });
+
+
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+
+
+
+            location.reload()
+        }
+
+        function chamarDeletarComida() {
+            let nome = select_comida_deletar.value;
+
+            for (let i = 0; i < historicoComidahoje.length; i++) {
+                if (nome == historicoComidahoje[i].nome) {
+                    fetch("/comidaMetaDia/deletarComidaMetaDia", {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            idUserServer: sessionStorage.ID_USUARIO,
+                            idComidaServer: historicoComidahoje[i].id_comida,
+                            idComidaMetaDiaServer: historicoComidahoje[i].id_comida_meta
+                        }),
+
+                    }).then((resposta) => {
+                        if (resposta.ok) {
+                            fetch("/meta_dia/tirar_caloria_dia", {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                idUserServer: sessionStorage.ID_USUARIO,
+                                contagemServer: historicoComidahoje[i].caloria
+                            })
+                        }).then((response) => {
+                            console.log("item excluido com sucesso: ", resposta)
+                            setTimeout(() => {
+                                location.reload()
+                            }, "1000");
+                        }).catch((erro) => {
+
+                        })
+                        }else{
+                            throw erro;
+                            console.log("deu erro")
+                        }
+                    }).catch((erro) => {
+                        console.log(erro)
+                    })
+                }
+            }
+        }
+    }
 </script>

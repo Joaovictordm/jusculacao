@@ -21,6 +21,7 @@ var taxaRouter = require("./src/routes/taxa.js");
 var comidaRouter = require("./src/routes/comida.js");
 var diaRouter = require("./src/routes/meta_dia.js");
 var comidaMetaDiaRouter = require("./src/routes/comidaMetaDia.js");
+var historicoRouter = require("./src/routes/historico.js");
 
 
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/taxa", taxaRouter);
 app.use("/comida", comidaRouter);
 app.use("/meta_dia", diaRouter);
 app.use("/comidaMetaDia", comidaMetaDiaRouter);
+app.use("/historico", historicoRouter);
 
 
 app.listen(PORTA_APP, function () {

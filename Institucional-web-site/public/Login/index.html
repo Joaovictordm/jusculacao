@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-      <link rel="stylesheet" href="./style/styleConfig.css">
-      <link rel="stylesheet" href="./style/styleLogin.css">
-      <link rel="stylesheet" href="../landing-page/index.html">
+    <link rel="stylesheet" href="./style/styleConfig.css">
+    <link rel="stylesheet" href="./style/styleLogin.css">
+    <link rel="stylesheet" href="../landing-page/index.html">
 </head>
+
 <body>
     <div class="container">
         <div class="containerForm">
             <div class="ContainerSeta">
-                <img class="img" src="../IMGs/arrow-back.svg" onclick="window.location.href = '../index.html'" >
+                <img class="img" src="../IMGs/arrow-back.svg" onclick="window.location.href = '../index.html'">
             </div>
             <div class="containerLogo">
                 <img src="../IMGs/logo.jpg">
@@ -36,8 +38,8 @@
                         <span>Senha</span>
                     </div>
 
-                    <div >
-                        <input type="text" class="input" placeholder="Digite sua senha" id="senha_input">
+                    <div>
+                        <input type="password" class="input" placeholder="Digite sua senha" id="senha_input">
                     </div>
                     <div id="erro_senha"></div>
                 </div>
@@ -50,14 +52,12 @@
                         Não tem conta? <a onclick="window.location.href = '../register/index.html'">Cadastre-se</a>
                     </span>
                 </div>
-                
-              
-                    <button class="button" onclick="entrar()">Logar</button>
-            
-                
-                <div class="password">
-                    <span onclick="window.location.href = '../recuperar-senha/enviar-email/index.html'">Esqueceu a senha?</span>
-                </div>
+
+
+                <button class="button" onclick="entrar()">Logar</button>
+
+
+
             </div>
         </div>
 
@@ -66,6 +66,7 @@
         </div>
     </div>
 </body>
+
 </html>
 
 <script>
@@ -99,6 +100,7 @@
 
             if (resposta.ok) {
                 console.log(resposta);
+                mensagem_erro.innerHTML = `<span style="color: green;">Cadastro realizado com sucesso!</span>`;
 
                 resposta.json().then(json => {
                     console.log(JSON.stringify(json));
@@ -115,37 +117,40 @@
                         //     idServer: json.id
                         // })
                     }).then((res) => {
-                        if(res.ok){
-                           res.json().then((dados) => {
-                                if (dados == 0){
+                        if (res.ok) {
+                            res.json().then((dados) => {
+                                if (dados == 0) {
                                     console.log("Não tem taxa")
-                                     setTimeout(function () {
-                                         window.location = "../Formulario/index.html";
-                                     }, 1000); 
-                                }else if (dados == 1){
+                                    setTimeout(function () {
+                                        window.location = "../Formulario/index.html";
+                                    }, 1000);
+                                } else if (dados == 1) {
                                     console.log("tem taxa")
-                                setTimeout(function () {
-                                    window.location = "../dashboard/index/index.html";
-                                }, 1000);
+                                    setTimeout(function () {
+                                        window.location = "../dashboard/index/index.html";
+                                    }, 1000);
                                 }
-                           })
-                           
-                        }else if(!res.ok){
+                            })
+
+                        } else if (!res.ok) {
                             console.log("deu erro pra ver se ele tem taxa")
                             res.text.then(texto => {
                                 console.error(texto)
-                            })                          
+                            })
                         }
                     }).catch((erro) => {
                         console.log("erro")
-                        console.log( erro)
+                        console.log(erro)
                     })
-            });
-     
-            } else {
+                });
 
+            } else {
+                mensagem_erro.innerHTML = `<span style="color: red;">Deu erro ao realizar login</span>`;
                 console.log("Houve um erro ao tentar realizar o login!");
 
+                setTimeout(() => {
+                    location.reload()
+                }, "2000");
                 resposta.text().then(texto => {
                     console.error(texto);
                 });

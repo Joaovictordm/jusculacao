@@ -180,3 +180,10 @@
 .container .containerForm .ContainerSeta .img:hover{
  cursor: pointer;
 }
+.mensagemErroClass{
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.6;
+    height: 2rem;
+    width: 15rem;
+}

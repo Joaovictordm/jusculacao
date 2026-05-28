@@ -12,6 +12,7 @@
         <div class="containerImg">
             <img src="../IMGs/gym.svg" class="img">
         </div>
+        <div id="containerPrincipal"></div>
         <div class="containerForm">
             <div class="ContainerSeta">
                 <img class="img" src="../IMGs/arrow-back.svg" onclick="window.location.href = '../login/index.html'">
@@ -50,7 +51,7 @@
                     </div>
 
                     <div >
-                        <input type="text" class="input" placeholder="Digite sua senha" id="ipt_senha">
+                        <input type="password" class="input" placeholder="Digite sua senha" id="ipt_senha">
                     </div>
                     <div id="mensagem_erro_senha"></div>
                 </div>
@@ -61,29 +62,23 @@
                     </div>
 
                     <div >
-                        <input type="text" class="input" placeholder="Digite sua senha" id="ipt_repetir_senha">
+                        <input type="password" class="input" placeholder="Digite sua senha" id="ipt_repetir_senha">
                     </div>
                     <div id="mensagem_erro_repetir_senha"></div>
                 </div>
-                <div id="mensagem_erro"></div>
+                <div id="mensagem_erro" class="mensagemErroClass"></div>
             </div>
 
             <div class="containerButton">              
                     <button class="button" onclick="cadastrar()">registrar</button>
             </div>
         </div>
-
-        
     </div>
 </body>
 </html>
 <script>
 
   function cadastrar() {
-    // aguardar();
-
-    //Recupere o valor da nova input pelo nome do id
-    // Agora vá para o método fetch logo abaixo
     var nomeVar = ipt_nome.value;
     var emailVar = ipt_email.value;
     var senhaVar = ipt_senha.value;
@@ -173,12 +168,18 @@
         console.log("resposta: ", resposta);
         if (resposta.ok) {
           // cardErro.style.display = "block";
-          mensagem_erro.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+          mensagem_erro.innerHTML = `<span style="color: green;">Cadastro realizado com sucesso! Redirecionando para tela de Login</span>`;
+
           setTimeout(() => {
             window.location = "../login/index.html";
           }, "2000");
 
         } else {
+          mensagem_erro.innerHTML = `<span style="color: red;">Houve um erro ao tentar realizar o cadastro!</span>`;
+
+          setTimeout(() => {
+            location.reload()
+          }, "2000");
           throw "Houve um erro ao tentar realizar o cadastro!";
         }
       })

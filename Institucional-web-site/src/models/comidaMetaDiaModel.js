@@ -1,7 +1,7 @@
 var database = require("../database/config");
 
-function adicionarComidaMetaDia(id_usuario, id_comida){
-    let instrucao = `INSERT INTO comidas_meta_dia (fk_usuario, fk_meta_dia, fk_comida) VALUES(${id_usuario}, current_date(), ${id_comida})`
+function adicionarComidaMetaDia(id_usuario, id_comida, peso_adicionado){
+    let instrucao = `INSERT INTO comidas_meta_dia (fk_usuario, fk_meta_dia, fk_comida, peso_adicionado) VALUES(${id_usuario}, current_date(), ${id_comida}, ${peso_adicionado})`
 
     return database.executar(instrucao);
 }

@@ -25,7 +25,20 @@ function adicionarTaxa(req, res){
         return console.log("objetivo undefined")
     }
 
-    var taxa = ((10 * peso) + (6.25 * altura) - (5 * idade) + 5) * atividade_fisica;
+    if (sexo == "feminino"){
+        var taxa = ((10 * peso) + (6.25 * altura) - (5 * idade) - 161 ) * atividade_fisica;
+    }else if (sexo == "masculino"){
+        var taxa = ((10 * peso) + (6.25 * altura) - (5 * idade) + 5) * atividade_fisica;
+    }
+
+// Para homens: 
+
+// TMB=10W + 6.25H − 5A + 5 
+
+// Para mulheres: 
+
+// TMB=10W + 6.25H − 5A − 161 
+
     
 
     //https://www.healthline.com/nutrition/calorie-deficit?utm_source=chatgpt.com#faq

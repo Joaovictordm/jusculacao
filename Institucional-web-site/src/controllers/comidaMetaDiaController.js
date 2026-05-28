@@ -3,6 +3,7 @@ var comidaMetaDiaModel = require("../models/comidaMetaDiaModel")
 function adicionarComidaMetaDiaController(req, res){
     let idUser = req.body.idUserServer;
     let idComida = req.body.idComidaServer;
+    let pesoAdicionado = req.body.pesoServer;
     
     if (idUser == undefined){
         res.status(400).json(`Id do usuário undefined`)
@@ -13,7 +14,7 @@ function adicionarComidaMetaDiaController(req, res){
     }
 
 
-    comidaMetaDiaModel.adicionarComidaMetaDia(idUser, idComida).then((resposta) => {
+    comidaMetaDiaModel.adicionarComidaMetaDia(idUser, idComida, pesoAdicionado).then((resposta) => {
         res.status(200).json(resposta);
         console.log("comida adicionada em uma meta");
     }).catch((erro) => {
@@ -77,6 +78,8 @@ function verQuantoFalta(req, res){
         res.status(500).json(erro.sqlMessage);
     })
 }
+
+
 
 
 
